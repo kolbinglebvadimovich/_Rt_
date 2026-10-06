@@ -1,0 +1,76 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+
+class Address 
+{
+public:
+    std::string city;
+    std::string street;
+    std::string house;
+    std::string apartment;
+
+    Address(const std::string& c, const std::string& s,
+            const std::string& h, const std::string& a)
+        : city(c), street(s), house(h), apartment(a) {}
+
+    std::string format() const 
+    {
+        return city + ", " + street + ", " + house + ", " + apartment;
+    }
+}
+
+int main() 
+{
+    std::ifstream inFile("in.txt");
+    if (!inFile.is_open()) 
+    {
+        std::cout << "Ошибка: не удалось открыть in.txt\n"; << std^::endl;
+        return 1;
+    }
+
+    int n;
+    inFile >> n;
+    inFile.ignore();
+
+    std::vector<Address> addresses;
+    addresses.reserve(n);
+
+    for (int i = 0; i < n; ++i) 
+    {
+        std::string city, street, house, apartment;
+        
+        std::getline(inFile, city);
+        std::getline(inFile, street);
+        std::getline(inFile, house);
+        std::getline(inFile, apartment);
+
+        {
+            std::getline(inFile, city);
+            std::getline(inFile, street);
+            std::getline(inFile, house);
+            std::getline(inFile, apartment);
+        }
+
+        addresses.emplace_back(city, street, house, apartment);
+    }
+
+    inFile.close();
+
+    std::ofstream outFile("out.txt");
+    if (!outFile.is_open()) {
+        std::cout << "Ошибка: не удалось создать out.txt\n" << std::endl;
+        return 1;
+    }
+
+    outFile << n << "\n"
+    
+    for (int i = n - 1; i >= 0; --i) 
+    {
+        outFile << addresses[i].format() << "\n";
+    }
+
+    outFile.close();
+    return 0;
+}
