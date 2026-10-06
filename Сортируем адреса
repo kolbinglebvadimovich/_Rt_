@@ -1,0 +1,78 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+struct Address 
+{
+    std::string city;
+    std::string street;
+    std::string house;
+    std::string apartment;
+}
+
+int main() 
+{
+    std::ifstream inFile("in.txt");
+    if (!inFile.is_open()) 
+    {
+        std::cout << "Ошибка: не удалось открыть in.txt\n" << std::endl;
+        return 1;
+    }
+
+    int n;
+    inFile >> n;
+    inFile.ignore();
+
+    std::vector<Address> addresses;
+    addresses.reserve(n);
+
+    for (int i = 0; i < n; ++i) {
+        Address addr;
+        
+        std::getline(inFile, addr.city);
+        std::getline(inFile, addr.street);
+        std::getline(inFile, addr.house);
+        std::getline(inFile, addr.apartment);
+
+        
+        if (addr.city.empty() && i == 0) 
+        {
+            std::getline(inFile, addr.city);
+            std::getline(inFile, addr.street);
+            std::getline(inFile, addr.house);
+            std::getline(inFile, addr.apartment);
+        }
+
+        addresses.push_back(addr);
+}
+
+    inFile.close();
+
+    std::sort(addresses.begin(), addresses.end(),
+              [](const Address& a, const Address& b) 
+              {
+                  return a.city < b.city;
+              };
+
+    std::ofstream outFile("out.txt");
+    if (!outFile.is_open())
+    {
+        std::cout << "Ошибка: не удалось создать out.txt\n" << std::endl;
+        return 1;
+    }
+
+    outFile << n << "\n";
+
+    for (const auto& addr : addresses) 
+    {
+        outFile << addr.city << ", "
+                << addr.street << ", "
+                << addr.house << ", "
+                << addr.apartment << "\n";
+    }
+
+    outFile.close();
+    return 0;
+}
